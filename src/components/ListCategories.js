@@ -8,7 +8,8 @@ import { faUtensils,faCoffee,faCheese } from "@fortawesome/free-solid-svg-icons"
 const Icon = ({ nama }) => {
   if (nama === "Makanan")
     return <FontAwesomeIcon icon={faUtensils} className="mr-2" />;
-  if (nama === "Minuman") return <FontAwesomeIcon icon={faCoffee} />;
+  if (nama === "Minuman") 
+    return <FontAwesomeIcon icon={faCoffee} />;
   if (nama === "Cemilan")
     return <FontAwesomeIcon icon={faCheese} className="mr-2" />;
 

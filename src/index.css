@@ -6,13 +6,18 @@ body {
 }
 
 .navbar{
-  background-color: #22668a;
+  background-color: #dc2120;
 }
 
 .category-active{
-  background-color: #22668a;
+  background-color: #dfa345;
   color: white;
 }
+
+.harga{
+  color: #524239;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;

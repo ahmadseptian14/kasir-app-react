@@ -3,6 +3,7 @@ import { Row, Col } from "react-bootstrap";
 import {ListCategories, Hasil, NavbarComponent, Menus} from './components';
 import {API_URL} from './utils/contants'
 import axios from 'axios'
+import swal from 'sweetalert'
 
 export default class App extends Component {
   constructor(props) {
@@ -10,7 +11,8 @@ export default class App extends Component {
   
     this.state = {
        menus: [],
-       chooseCategory: 'Makanan'
+       chooseCategory: 'Makanan',
+       carts:[]
     }
   }
 
@@ -24,6 +26,31 @@ export default class App extends Component {
     .catch(error => {
       console.log(error);
     })
+
+    axios
+    .get(API_URL+"keranjangs")
+    .then(res => {
+      const carts = res.data;
+      this.setState({ carts });
+    })
+    .catch(error => {
+      console.log(error);
+    })
+  }
+
+  componentDidUpdate(prevState) {
+    if(this.state.carts !== prevState.carts)
+    {
+      axios
+      .get(API_URL+"keranjangs")
+      .then(res => {
+        const carts = res.data;
+        this.setState({ carts });
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
   }
 
   changeCategory = (value) => {
@@ -43,9 +70,65 @@ export default class App extends Component {
       })
   }
 
+  inCarts = (value) => {
+
+    axios
+    .get(API_URL+"keranjangs?product.id="+value.id)
+    .then(res => {
+      if(res.data.length === 0){
+        const cart = {
+          jumlah: 1,
+          total_harga: value.harga,
+          product: value
+        }
+    
+        axios
+        .post(API_URL+"keranjangs", cart)
+        .then(res => {
+          swal({
+            title: "Sukses Masuk Keranjang",
+            text: "Sukses Masuk Keranjang"+cart.product.nama,
+            icon: "success",
+            button: false,
+            timer: 1000
+          });
+        })
+        .catch(error => {
+          console.log(error);
+        })
+      }else{
+
+        const cart = {
+          jumlah: res.data[0].jumlah+1,
+          total_harga: res.data[0].total_harga+value.harga,
+          product: value
+        }
+
+        axios
+        .put(API_URL+"keranjangs/"+res.data[0].id, cart)
+        .then(res => {
+          swal({
+            title: "Sukses Masuk Keranjang",
+            text: "Sukses Masuk Keranjang" +cart.product.nama,
+            icon: "success",
+            button: false,
+            timer: 1000
+          });
+        })
+        .catch(error => {
+          console.log(error);
+        })
+
+      }
+    })
+    .catch(error => {
+      console.log(error);
+    })
+  }
+
   
   render() {
-    const {menus, chooseCategory} = this.state
+    const {menus, chooseCategory, carts} = this.state
     return (
       <div className="App">
       <NavbarComponent />
@@ -61,11 +144,12 @@ export default class App extends Component {
                 <Menus
                   key={menu.id}
                   menu={menu}
+                  inCarts={this.inCarts}
                 />
               ))}
             </Row>
           </Col>
-          <Hasil />
+          <Hasil carts={carts}/>
       </Row>
     </div>
     )
