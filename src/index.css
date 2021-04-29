@@ -18,6 +18,29 @@ body {
   color: #524239;
 }
 
+.btn-primary{
+  background-color: #dfa345;
+}
+
+.btn-primary:hover{
+  background-color: #dfa345;
+
+}
+
+@media only screen and (max-height: 1000px) {
+  .hasil{
+    height: 350px;
+  }
+  .menu{
+    height: 450px;
+  }
+}
+
+
+.overflow-auto::-webkit-scrollbar{
+  display: none;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
